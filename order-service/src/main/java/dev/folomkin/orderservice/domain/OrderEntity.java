@@ -19,7 +19,7 @@ import java.util.Set;
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_entity_gen")
-    @SequenceGenerator(name = "order_entity_gen", sequenceName = "order_entity_seq")
+    @SequenceGenerator(name = "order_entity_gen", sequenceName = "orderentity_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -39,11 +39,11 @@ public class OrderEntity {
     private Integer etaMinutes;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "order_ststus", nullable = false)
+    @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus;
 
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
-    private Set<OrderItemEntity> orderItemEntities = new LinkedHashSet<>();
+    private Set<OrderItemEntity> items = new LinkedHashSet<>();
 
 }

@@ -14,7 +14,8 @@ import java.util.Objects;
 @Table(name = "order_item_entity")
 public class OrderItemEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_item_entity_gen")
+    @SequenceGenerator(name = "order_item_entity_gen", sequenceName = "order_itementity_gen", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -29,7 +30,10 @@ public class OrderItemEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "price_at purchase")
+    @Column(name="item_name")
+    private String name;
+
+    @Column(name = "price_at_purchase")
     private BigDecimal priceAtPurchase;
 
 

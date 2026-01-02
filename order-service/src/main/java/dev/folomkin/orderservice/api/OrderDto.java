@@ -16,5 +16,6 @@ public record OrderDto(Long id,
                        String courierName,
                        Integer etaMinutes,
                        OrderStatus orderStatus,
-                       Set<OrderItemDto> orderItemEntities) implements Serializable {
+                       Set<OrderItemDto> items
+) implements Serializable {
 }

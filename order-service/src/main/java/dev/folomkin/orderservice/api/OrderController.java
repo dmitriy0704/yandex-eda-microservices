@@ -1,8 +1,6 @@
 package dev.folomkin.orderservice.api;
 
-import dev.folomkin.orderservice.domain.OrderEntity;
 import dev.folomkin.orderservice.domain.OrderEntityMapper;
-import dev.folomkin.orderservice.domain.OrderItemEntity;
 import dev.folomkin.orderservice.domain.OrderProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +16,9 @@ public class OrderController {
     private final OrderEntityMapper orderEntityMapper;
 
     @PostMapping
-    public OrderDto create(@RequestBody OrderEntity orderItemEntity) {
-        log.info("creating order with id: {}", orderItemEntity);
-        var saved = orderProcessor.create(orderItemEntity);
+    public OrderDto create(@RequestBody CreateOrderRequestDto request) {
+        log.info("Creating order: request={}", request);
+        var saved = orderProcessor.create(request);
         return orderEntityMapper.toOrderDto(saved);
     }
 

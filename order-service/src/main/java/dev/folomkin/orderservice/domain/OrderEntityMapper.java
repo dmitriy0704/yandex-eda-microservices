@@ -1,5 +1,6 @@
 package dev.folomkin.orderservice.domain;
 
+import dev.folomkin.orderservice.api.CreateOrderRequestDto;
 import dev.folomkin.orderservice.api.OrderDto;
 import org.mapstruct.*;
 
@@ -9,11 +10,11 @@ import org.mapstruct.*;
 )
 public interface OrderEntityMapper {
 
-    OrderEntity toEntity(OrderDto orderDto);
+    OrderEntity toEntity(CreateOrderRequestDto requestDto);
 
     @AfterMapping
     default void linkOrderItemEntities(@MappingTarget OrderEntity orderEntity) {
-        orderEntity.getOrderItemEntities().forEach(orderItemEntity -> orderItemEntity.setOrder(orderEntity));
+        orderEntity.getItems().forEach(orderItemEntity -> orderItemEntity.setOrder(orderEntity));
     }
 
     OrderDto toOrderDto(OrderEntity orderEntity);
