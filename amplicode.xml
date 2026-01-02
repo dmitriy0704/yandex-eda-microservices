@@ -7,6 +7,11 @@
           <package value="dev.folomkin.orderservice" />
         </packages>
       </persistence-unit>
+      <persistence-unit moduleName="yandex-eda-microservices.payment-service.main" name="Default">
+        <packages>
+          <package value="dev.folomkin.paymentservice" />
+        </packages>
+      </persistence-unit>
     </persistence-units>
   </component>
 </project>
