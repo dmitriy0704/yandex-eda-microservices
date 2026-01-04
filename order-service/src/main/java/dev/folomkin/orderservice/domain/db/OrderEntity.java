@@ -1,4 +1,4 @@
-package dev.folomkin.orderservice.domain;
+package dev.folomkin.orderservice.domain.db;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,7 +40,7 @@ public class OrderEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false)
-    private OrderStatus orderStatus;
+    private dev.folomkin.api.http.order.OrderStatus orderStatus;
 
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)

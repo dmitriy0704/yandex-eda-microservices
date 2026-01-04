@@ -1,4 +1,4 @@
-package dev.folomkin.commonlibs;
+package dev.folomkin.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

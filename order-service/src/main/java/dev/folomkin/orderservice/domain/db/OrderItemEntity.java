@@ -1,4 +1,4 @@
-package dev.folomkin.orderservice.domain;
+package dev.folomkin.orderservice.domain.db;
 
 import jakarta.persistence.*;
 import lombok.Getter;

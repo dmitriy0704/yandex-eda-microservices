@@ -1,7 +1,7 @@
-package dev.folomkin.orderservice.domain;
+package dev.folomkin.orderservice.domain.db;
 
-import dev.folomkin.orderservice.api.CreateOrderRequestDto;
-import dev.folomkin.orderservice.api.OrderDto;
+import dev.folomkin.api.http.order.CreateOrderRequestDto;
+import dev.folomkin.api.http.order.OrderDto;
 import org.mapstruct.*;
 
 @Mapper(

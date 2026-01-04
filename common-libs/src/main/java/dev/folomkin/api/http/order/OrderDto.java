@@ -1,13 +1,11 @@
-package dev.folomkin.orderservice.api;
+package dev.folomkin.api.http.order;
 
-import dev.folomkin.orderservice.domain.OrderStatus;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Set;
 
 /**
- * DTO for {@link dev.folomkin.orderservice.domain.OrderEntity}
  */
 public record OrderDto(Long id,
                        Long customerId,

@@ -1,5 +1,7 @@
-package dev.folomkin.paymentservice.domain;
+package dev.folomkin.paymentservice.domain.db;
 
+import dev.folomkin.api.http.payment.PaymentMethod;
+import dev.folomkin.api.http.payment.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +32,7 @@ public class PaymentEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false)
-    private PaymentStatus  paymentStatus;
+    private PaymentStatus paymentStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false)

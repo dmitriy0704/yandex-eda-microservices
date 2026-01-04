@@ -1,4 +1,4 @@
-package dev.folomkin.orderservice.api;
+package dev.folomkin.api.http.order;
 
 public record OrderItemRequestDto(
         Long itemId,

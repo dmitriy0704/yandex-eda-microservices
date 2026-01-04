@@ -1,4 +1,4 @@
-package dev.folomkin.orderservice.domain;
+package dev.folomkin.api.http.order;
 
 public enum OrderStatus {
     PENDING_PAYMENT,

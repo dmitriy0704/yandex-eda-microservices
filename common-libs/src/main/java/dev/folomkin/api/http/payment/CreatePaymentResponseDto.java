@@ -1,7 +1,5 @@
-package dev.folomkin.paymentservice.api;
+package dev.folomkin.api.http.payment;
 
-import dev.folomkin.paymentservice.domain.PaymentMethod;
-import dev.folomkin.paymentservice.domain.PaymentStatus;
 
 import java.math.BigDecimal;
 

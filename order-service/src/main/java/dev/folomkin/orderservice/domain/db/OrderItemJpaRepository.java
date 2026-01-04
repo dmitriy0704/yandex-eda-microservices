@@ -1,4 +1,4 @@
-package dev.folomkin.orderservice.domain;
+package dev.folomkin.orderservice.domain.db;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

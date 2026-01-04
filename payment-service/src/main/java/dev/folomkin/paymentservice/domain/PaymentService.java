@@ -1,9 +1,10 @@
-package dev.folomkin.paymentservice.api;
+package dev.folomkin.paymentservice.domain;
 
-import dev.folomkin.paymentservice.domain.PaymentEntityRepository;
-import dev.folomkin.paymentservice.domain.PaymentMethod;
-import dev.folomkin.paymentservice.domain.PaymentStatus;
-import io.swagger.v3.oas.annotations.servers.Server;
+import dev.folomkin.api.http.payment.CreatePaymentRequestDto;
+import dev.folomkin.api.http.payment.PaymentMethod;
+import dev.folomkin.api.http.payment.PaymentStatus;
+import dev.folomkin.paymentservice.domain.db.PaymentEntityMapper;
+import dev.folomkin.paymentservice.domain.db.PaymentEntityRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,7 @@ public class PaymentService {
     private final PaymentEntityMapper mapper;
     private final PaymentEntityRepository repository;
 
-
-    public CreatePaymentResponseDto makePayment(CreatePaymentRequestDto request) {
+    public dev.folomkin.api.http.payment.CreatePaymentResponseDto makePayment(CreatePaymentRequestDto request) {
         var found = repository.findByOrderId(request.orderId());
         if (found.isPresent()) {
             log.info("Payment already exists for orderId={}", request.orderId());

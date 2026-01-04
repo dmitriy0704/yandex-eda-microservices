@@ -1,4 +1,4 @@
-package dev.folomkin.paymentservice.domain;
+package dev.folomkin.paymentservice.domain.db;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

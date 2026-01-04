@@ -1,5 +1,7 @@
 package dev.folomkin.paymentservice.api;
 
+import dev.folomkin.api.http.payment.CreatePaymentRequestDto;
+import dev.folomkin.paymentservice.domain.PaymentService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +18,7 @@ public class PaymentController {
     private final PaymentService service;
 
     @PostMapping
-    public CreatePaymentResponseDto createPayment(
+    public dev.folomkin.api.http.payment.CreatePaymentResponseDto createPayment(
             @RequestBody CreatePaymentRequestDto request
     ) {
         log.info("Received request, paymentREquest={}", request);

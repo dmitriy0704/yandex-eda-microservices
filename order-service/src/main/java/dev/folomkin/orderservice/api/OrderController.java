@@ -1,6 +1,8 @@
 package dev.folomkin.orderservice.api;
 
-import dev.folomkin.orderservice.domain.OrderEntityMapper;
+import dev.folomkin.api.http.order.CreateOrderRequestDto;
+import dev.folomkin.api.http.order.OrderDto;
+import dev.folomkin.orderservice.domain.db.OrderEntityMapper;
 import dev.folomkin.orderservice.domain.OrderProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,4 +30,16 @@ public class OrderController {
         var found = orderProcessor.getOrderOrThrow(id);
         return orderEntityMapper.toOrderDto(found);
     }
+
+
+    @PostMapping("/{id}/pay")
+    public OrderDto payOrder(
+            @PathVariable Long id,
+            @RequestBody OrderPaymentRequest request
+    ) {
+        log.info("Paying order with id={}, request={}", id, request);
+        var entity = orderProcessor.processPayment(id, request);
+        return orderEntityMapper.toOrderDto(entity);
+    }
+
 }

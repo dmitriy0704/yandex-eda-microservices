@@ -1,6 +1,6 @@
-package dev.folomkin.paymentservice.api;
+package dev.folomkin.paymentservice.domain.db;
 
-import dev.folomkin.paymentservice.domain.PaymentEntity;
+import dev.folomkin.api.http.payment.CreatePaymentRequestDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -13,5 +13,5 @@ public interface PaymentEntityMapper {
     PaymentEntity toEntity(CreatePaymentRequestDto request);
 
     @Mapping(source = "id", target = "paymentId")
-    CreatePaymentResponseDto toResponseDto(PaymentEntity entity);
+    dev.folomkin.api.http.payment.CreatePaymentResponseDto toResponseDto(PaymentEntity entity);
 }

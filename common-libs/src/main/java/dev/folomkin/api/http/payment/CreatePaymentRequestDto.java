@@ -1,9 +1,11 @@
-package dev.folomkin.paymentservice.api;
+package dev.folomkin.api.http.payment;
 
-import dev.folomkin.paymentservice.domain.PaymentMethod;
+
+import lombok.Builder;
 
 import java.math.BigDecimal;
 
+@Builder
 public record CreatePaymentRequestDto(
         Long orderId,
         PaymentMethod paymentMethod,

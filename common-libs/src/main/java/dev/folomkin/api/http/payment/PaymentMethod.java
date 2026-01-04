@@ -1,4 +1,4 @@
-package dev.folomkin.paymentservice.domain;
+package dev.folomkin.api.http.payment;
 
 public enum  PaymentMethod {
     CARD,
