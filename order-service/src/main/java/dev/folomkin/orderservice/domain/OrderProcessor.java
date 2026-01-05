@@ -3,7 +3,9 @@ package dev.folomkin.orderservice.domain;
 import dev.folomkin.api.http.order.CreateOrderRequestDto;
 import dev.folomkin.api.http.order.OrderStatus;
 import dev.folomkin.api.http.payment.CreatePaymentRequestDto;
+import dev.folomkin.api.http.payment.CreatePaymentResponseDto;
 import dev.folomkin.api.http.payment.PaymentStatus;
+import dev.folomkin.api.kafka.OrderPaidEvent;
 import dev.folomkin.orderservice.api.OrderPaymentRequest;
 import dev.folomkin.orderservice.domain.db.OrderEntity;
 import dev.folomkin.orderservice.domain.db.OrderEntityMapper;
@@ -11,13 +13,17 @@ import dev.folomkin.orderservice.domain.db.OrderItemEntity;
 import dev.folomkin.orderservice.domain.db.OrderJpaRepository;
 import dev.folomkin.orderservice.external.PaymentHttpClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class OrderProcessor {
@@ -25,6 +31,10 @@ public class OrderProcessor {
     private final OrderJpaRepository orderJpaRepository;
     private final OrderEntityMapper orderEntityMapper;
     private final PaymentHttpClient paymentHttpClient;
+    private final KafkaTemplate<Long, OrderPaidEvent> kafkaTemplate;
+
+    @Value("${order-paid-topic}")
+    private String orderPaidTopic;
 
     public OrderEntity create(CreateOrderRequestDto request) {
         var entity = orderEntityMapper.toEntity(request);
@@ -70,6 +80,24 @@ public class OrderProcessor {
                 : OrderStatus.PAID;
 
         entity.setOrderStatus(status);
+        saidOrderPaidEvent(entity, response);
         return orderJpaRepository.save(entity);
+    }
+
+    private void saidOrderPaidEvent(OrderEntity entity, CreatePaymentResponseDto responseDto) {
+        kafkaTemplate.send(
+                orderPaidTopic,
+                entity.getId(),
+                OrderPaidEvent.builder()
+                        .orderId(entity.getId())
+                        .amount(entity.getTotalAmount())
+                        .paymentMethod(responseDto.paymentMethod())
+                        .paymentId(responseDto.paymentId())
+                        .build()
+        ).thenAccept(
+                resoult -> {
+                    log.info("Order paid event sent with id {} ", entity.getId());
+                }
+        );
     }
 }
