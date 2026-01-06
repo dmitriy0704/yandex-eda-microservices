@@ -3,7 +3,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     password: postgres
     username: postgres
-    url: jdbc:postgresql://localhost/orders
+    url: jdbc:postgresql://localhost:5433/orders
   application:
     name: order-service
   jpa:
@@ -20,3 +20,4 @@ payment-service:
   base-url: http://localhost:8081
 
 order-paid-topic: orders.events
+delivery-assigned-topic: delivery.events

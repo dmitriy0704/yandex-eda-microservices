@@ -5,6 +5,7 @@ import dev.folomkin.api.http.order.OrderStatus;
 import dev.folomkin.api.http.payment.CreatePaymentRequestDto;
 import dev.folomkin.api.http.payment.CreatePaymentResponseDto;
 import dev.folomkin.api.http.payment.PaymentStatus;
+import dev.folomkin.api.kafka.DeliveryAssignedEvent;
 import dev.folomkin.api.kafka.OrderPaidEvent;
 import dev.folomkin.orderservice.api.OrderPaymentRequest;
 import dev.folomkin.orderservice.domain.db.OrderEntity;
@@ -76,28 +77,52 @@ public class OrderProcessor {
                 .amount(entity.getTotalAmount())
                 .build());
         var status = response.paymentStatus().equals(PaymentStatus.PAYMENT_SUCCEEDED)
-                ? OrderStatus.PAYMENT_FAILED
-                : OrderStatus.PAID;
+                ? OrderStatus.PAID
+                : OrderStatus.PAYMENT_FAILED;
 
         entity.setOrderStatus(status);
-        saidOrderPaidEvent(entity, response);
+        if (status.equals(OrderStatus.PAID)) {
+            sendOrderPaidEvent(entity, response);
+        }
         return orderJpaRepository.save(entity);
     }
 
-    private void saidOrderPaidEvent(OrderEntity entity, CreatePaymentResponseDto responseDto) {
+    private void sendOrderPaidEvent(
+            OrderEntity entity,
+            CreatePaymentResponseDto paymentResponseDto
+    ) {
         kafkaTemplate.send(
                 orderPaidTopic,
                 entity.getId(),
                 OrderPaidEvent.builder()
                         .orderId(entity.getId())
                         .amount(entity.getTotalAmount())
-                        .paymentMethod(responseDto.paymentMethod())
-                        .paymentId(responseDto.paymentId())
+                        .paymentMethod(paymentResponseDto.paymentMethod())
+                        .paymentId(paymentResponseDto.paymentId())
                         .build()
-        ).thenAccept(
-                resoult -> {
-                    log.info("Order paid event sent with id {} ", entity.getId());
-                }
-        );
+        ).thenAccept(result -> {
+            log.info("Order Paid event sent: id={}", entity.getId());
+        });
+    }
+
+    public void processDeliveryAssigned(DeliveryAssignedEvent event) {
+        var order = getOrderOrThrow(event.orderId());
+        if (!order.getOrderStatus().equals(OrderStatus.PAID)) {
+            processIncorrectDeliveryState(order);
+            return;
+        }
+        order.setOrderStatus(OrderStatus.DELIVERY_ASSIGNED);
+        order.setCourierName(event.courierName());
+        order.setEtaMinutes(event.etaMinutes());
+        orderJpaRepository.save(order);
+        log.info("Order delivery assigned processed: orderId={}", order.getId());
+    }
+
+    private void processIncorrectDeliveryState(OrderEntity order) {
+        if (order.getOrderStatus().equals(OrderStatus.DELIVERY_ASSIGNED)) {
+            log.info("Order delivery already processed: orderId={}", order.getId());
+        } else if (!order.getOrderStatus().equals(OrderStatus.PAID)) {
+            log.error("Trying to assign delivery but order have incorrect state: state={}", order.getId());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package dev.folomkin.orderservice.kafka;
 
+import dev.folomkin.api.kafka.DeliveryAssignedEvent;
 import dev.folomkin.api.kafka.OrderPaidEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -35,20 +36,22 @@ public class KafkaConfiguration {
         return new KafkaTemplate<>(orderPaidEventProducerFactory);
     }
 
-//    @Bean
-//    public ConsumerFactory<Long, OrderPaidEvent> orderPaidEventConsumerFactory(KafkaProperties kafkaProperties) {
-//        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
-//        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
-//        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-//        props.put(JsonDeserializer.TRUSTED_PACKAGES, "dev.folomkin.api.kafka");
-//        return new DefaultKafkaConsumerFactory<>(props);
-//    }
-//
-//    @Bean
-//    public KafkaListenerContainerFactory<?> orderPaidEventListenerFactory(ConsumerFactory<Long, OrderPaidEvent> orderPaidEventConsumerFactory) {
-//        ConcurrentKafkaListenerContainerFactory<Long, OrderPaidEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
-//        factory.setConsumerFactory(orderPaidEventConsumerFactory);
-//        factory.setBatchListener(false);
-//        return factory;
-//    }
+    @Bean
+    public ConsumerFactory<Long, DeliveryAssignedEvent> deliveryAssignedEventConsumerFactory(KafkaProperties kafkaProperties) {
+        Map<String, Object> props = kafkaProperties.buildConsumerProperties();
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "dev.folomkin.api.kafka");
+        return new DefaultKafkaConsumerFactory<>(props);
+    }
+
+    @Bean
+    public KafkaListenerContainerFactory<?> deliveryAssignedEventEventListenerFactory(
+            ConsumerFactory<Long, DeliveryAssignedEvent> orderPaidEventConsumerFactory) {
+
+        var factory = new ConcurrentKafkaListenerContainerFactory<Long, DeliveryAssignedEvent>();
+        factory.setConsumerFactory(orderPaidEventConsumerFactory);
+        factory.setBatchListener(false);
+        return factory;
+    }
 }

@@ -3,6 +3,7 @@ package dev.folomkin.orderservice.external;
 
 import dev.folomkin.api.http.payment.CreatePaymentRequestDto;
 import dev.folomkin.api.http.payment.CreatePaymentResponseDto;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
@@ -14,5 +15,5 @@ import org.springframework.web.service.annotation.PostExchange;
 public interface PaymentHttpClient {
     
     @PostExchange
-    CreatePaymentResponseDto createPayment(CreatePaymentRequestDto requestDto);
+    CreatePaymentResponseDto createPayment(@RequestBody CreatePaymentRequestDto requestDto);
 }
